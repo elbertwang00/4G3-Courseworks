@@ -81,8 +81,10 @@ i = i + (length<0);                                            % count epochs?!
 s = -df0; d0 = -s'*s;           % initial search direction (steepest) and slope
 x3 = red/(1-d0);                                  % initial step is red/(|s|+1)
 
+loading = waitbar(0, '');
 while i < abs(length)                                      % while not finished
   i = i + (length>0);                                      % count iterations?!
+  waitbar(i/length, loading, sprintf('Iteration %d / %d', i, length));
 
   X0 = X; F0 = f0; dF0 = df0;                   % make a copy of current values
   if length>0, M = MAX; else M = min(MAX, -length-i); end
@@ -167,6 +169,8 @@ while i < abs(length)                                      % while not finished
     ls_failed = 1;                                    % this line search failed
   end
 end
+close(loading);
+
 X = rewrap(Z,X); 
 fprintf('\n'); if exist('fflush','builtin') fflush(stdout); end
 
